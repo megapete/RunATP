@@ -7,18 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D31AE6302340DC8000F3ECF6 /* TPBIGS_SelectDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31AE62F2340DC8000F3ECF6 /* TPBIGS_SelectDelegate.swift */; };
+		D32BF1492340EFA4002C0D23 /* TPBIGS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32BF1482340EFA4002C0D23 /* TPBIGS.swift */; };
 		D3878B9623401C27008CC133 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3878B9523401C27008CC133 /* AppDelegate.swift */; };
 		D3878B9823401C27008CC133 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3878B9723401C27008CC133 /* Assets.xcassets */; };
 		D3878B9B23401C28008CC133 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3878B9923401C28008CC133 /* MainMenu.xib */; };
+		D3878BA623401DE1008CC133 /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3878BA523401DE1008CC133 /* AppController.swift */; };
+		D3878BA823402348008CC133 /* PCH_Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3878BA723402348008CC133 /* PCH_Defs.swift */; };
+		D3878BAA2340261B008CC133 /* GlobalDefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3878BA92340261B008CC133 /* GlobalDefs.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D31AE62F2340DC8000F3ECF6 /* TPBIGS_SelectDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPBIGS_SelectDelegate.swift; sourceTree = "<group>"; };
+		D32BF1482340EFA4002C0D23 /* TPBIGS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPBIGS.swift; sourceTree = "<group>"; };
 		D3878B9223401C27008CC133 /* RunATP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RunATP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3878B9523401C27008CC133 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D3878B9723401C27008CC133 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D3878B9A23401C28008CC133 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		D3878B9C23401C28008CC133 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D3878B9D23401C28008CC133 /* RunATP.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunATP.entitlements; sourceTree = "<group>"; };
+		D3878BA523401DE1008CC133 /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
+		D3878BA723402348008CC133 /* PCH_Defs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PCH_Defs.swift; path = ../../../../Dropbox/MyProjects/PCH_Defs.swift; sourceTree = "<group>"; };
+		D3878BA92340261B008CC133 /* GlobalDefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GlobalDefs.swift; path = ../../../../Dropbox/MyProjects/GlobalDefs.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +62,11 @@
 			isa = PBXGroup;
 			children = (
 				D3878B9523401C27008CC133 /* AppDelegate.swift */,
+				D3878BA523401DE1008CC133 /* AppController.swift */,
+				D31AE62F2340DC8000F3ECF6 /* TPBIGS_SelectDelegate.swift */,
+				D32BF1482340EFA4002C0D23 /* TPBIGS.swift */,
+				D3878BA92340261B008CC133 /* GlobalDefs.swift */,
+				D3878BA723402348008CC133 /* PCH_Defs.swift */,
 				D3878B9723401C27008CC133 /* Assets.xcassets */,
 				D3878B9923401C28008CC133 /* MainMenu.xib */,
 				D3878B9C23401C28008CC133 /* Info.plist */,
@@ -130,7 +145,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D31AE6302340DC8000F3ECF6 /* TPBIGS_SelectDelegate.swift in Sources */,
+				D3878BA823402348008CC133 /* PCH_Defs.swift in Sources */,
+				D32BF1492340EFA4002C0D23 /* TPBIGS.swift in Sources */,
 				D3878B9623401C27008CC133 /* AppDelegate.swift in Sources */,
+				D3878BAA2340261B008CC133 /* GlobalDefs.swift in Sources */,
+				D3878BA623401DE1008CC133 /* AppController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

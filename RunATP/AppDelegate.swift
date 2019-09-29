@@ -12,10 +12,15 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
-
-
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
+    @IBOutlet weak var appController: AppController!
+    
+    func applicationDidFinishLaunching(_ aNotification: Notification)
+    {
         // Insert code here to initialize your application
+        if let atpLocation = UserDefaults.standard.object(forKey: "ATP_URL") as? URL
+        {
+            appController.tpbigLocation = atpLocation
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
