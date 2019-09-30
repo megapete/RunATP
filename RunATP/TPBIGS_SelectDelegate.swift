@@ -19,28 +19,12 @@ class TPBIGS_SelectDelegate: NSObject, NSOpenSavePanelDelegate
         }
         
         // We only allow files called tpbigs
-        if url.lastPathComponent == "tpbigs"
+        if url.lastPathComponent == "tpbigs" || url.lastPathComponent == "tpbig" || url.lastPathComponent == "tpgigs" || url.lastPathComponent == "tpgig"
         {
-            do
-            {
-                // populate resSet with resource values that are in resSet (in this case, we're only interested in isExecutable)
-                let resSet:Set<URLResourceKey> = [.isExecutableKey]
-                let resVals = try url.resourceValues(forKeys:resSet)
-                
-                // The function may return nil, so we only test it if it's not nil
-                if let isExec = resVals.isExecutable
-                {
-                    return isExec
-                }
-            }
-            catch
-            {
-                return false
-            }
-            
-            return false
+            return true
         }
         
         return false
     }
+ 
 }

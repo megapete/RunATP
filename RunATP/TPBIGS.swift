@@ -301,8 +301,8 @@ class TPBIGS: NSObject
     // The URL of the executable
     var atpExecutable:URL
     
-    // The STARTUP file string to use when running ATP
-    var STARTUP:String? = nil
+    // The STARTUP file string to use when running ATP. If this is nil, it is assumed that the file STARTUP that is located in the same directory as TPBIGS will be used.
+    var STARTUP:URL? = nil
     
     // Designated initializer. Note that no check is done to verify that the URL is actually the executable ATP file. This verification should be made prior to creating the TPBIGS object.
     init(atpExecutable:URL)
@@ -310,13 +310,33 @@ class TPBIGS: NSObject
         self.atpExecutable = atpExecutable
     }
     
-    func RunATP(inputFileString:String, arguments:[String], STARTUP_FileString:String? = nil)
+    enum RunAtpError: Error
+    {
+        case AtpError(errorLine:String)
+        case NoStartupFileError
+        case NoGraphicsFileError
+        case NoGraphicsAuxFileError
+        case AtpCouldNotRunError(errorLine:String)
+    }
+    
+    func RunATP(inputFileString:String, arguments:[String] = [], STARTUP_FileString:String? = nil)
     {
         
     }
     
-    func RunATP(inputURL:URL, arguments:[String], STARTUP_URL:URL)
+    func RunATP(inputURL:URL, arguments:[String] = [], STARTUP_URL:URL? = nil) throws
     {
+        var useStartupURL = STARTUP_URL
+        
+        if useStartupURL == nil
+        {
+            useStartupURL = self.STARTUP
+        }
+        
+        if useStartupURL == nil
+        {
+            
+        }
         
     }
 

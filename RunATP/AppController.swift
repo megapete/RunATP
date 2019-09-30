@@ -10,49 +10,67 @@ import Cocoa
 
 class AppController: NSObject
 {
-    // Properties to hold the location (as a URL) of where the 'tpbigs' app is.
-    var atpLocation:URL? = nil
-    var tpbigLocation:URL?
-    {
-        set (newURL)
-        {
-            if let setURL = newURL
-            {
-                if FileManager.default.fileExists(atPath: setURL.path)
-                {
-                    self.atpLocation = setURL
-                    
-                    UserDefaults.standard.set(setURL, forKey: "ATP_URL")
-                }
-                else
-                {
-                    // leave the file as whatever it was and send an error message
-                    DLog("Attempt to set nonexistant file for tpbigs!")
-                }
-            }
-            else
-            {
-                // This really should not happen...
-                DLog("Attemot to set nil to atpLocation!")
-            }
-        }
-        
-        get
-        {
-            return self.atpLocation
-        }
-    }
+    var tpbigDirectory:URL? = nil
     
     // Menu handlers
     @IBAction func handleSetATPLocation(_ sender: Any)
     {
         let openPanel = NSOpenPanel()
         
-        openPanel.message = "Please select the 'tpbigs' file."
+        openPanel.message = "Please select one of the ATP programs (tpbig, tpbigs, tpgig, or tpgigs)."
+        let opDelegate = TPBIGS_SelectDelegate()
+        openPanel.delegate = opDelegate
+        openPanel.prompt = "Select"
+        
+        if openPanel.runModal() == .OK
+        {
+            if let theURL = openPanel.directoryURL
+            {
+                do
+                {
+                    let bookmarkData = try theURL.bookmarkData()
+                    
+                    UserDefaults.standard.set(bookmarkData, forKey: atpUrlBookmarkKey)
+                    
+                    self.tpbigDirectory = theURL
+                }
+                catch
+                {
+                    DLog("Error while trying to set bookmark. The error is: \(error)")
+                }
+            }
+        }
+        
+        DLog("Full path to ATP directory: \(self.tpbigDirectory!.path)")
         
     }
     
+    // Debug Menu handlers
+    @IBAction func handleResetAtpLocation(_ sender: Any)
+    {
+        UserDefaults.standard.removeObject(forKey: atpUrlBookmarkKey)
+    }
     
-     
+    @IBAction func handleInputCigreDat(_ sender: Any)
+    {
+        if let url = self.tpbigDirectory
+        {
+            let fileURL = url.appendingPathComponent("cigre.dat")
+            
+            DLog("Checking for: \(fileURL.path)")
+            
+            do
+            {
+                let testString = try String(contentsOf: fileURL)
+                
+                DLog("Length of file is: \(testString.count)")
+            }
+            catch
+            {
+                DLog("Error while accessing cigre.dat. The error is \(error)")
+            }
+        }
+    }
+    
 
 }

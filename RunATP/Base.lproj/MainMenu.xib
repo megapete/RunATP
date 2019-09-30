@@ -366,6 +366,25 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Debug" id="Fcw-AM-FFW">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Debug" id="4xM-wf-FMM">
+                        <items>
+                            <menuItem title="Reset ATP Location" id="ghC-Gn-fgn">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="handleResetAtpLocation:" target="JTe-sr-GDH" id="1pu-BA-9Sr"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Input CIgre.dat" id="2Hg-l9-gCc">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="handleInputCigreDat:" target="JTe-sr-GDH" id="8S5-4r-CZS"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="Format" id="jxT-CU-nIS">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Format" id="m8O-Qj-Ad4">
