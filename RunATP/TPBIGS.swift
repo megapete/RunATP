@@ -6,6 +6,7 @@
 //  Copyright © 2019 Peter Huber. All rights reserved.
 //
 
+import Foundation
 import Cocoa
 
 struct ATP_Startup
@@ -299,15 +300,15 @@ struct ATP_Startup
 class TPBIGS: NSObject
 {
     // The URL of the executable
-    var atpExecutable:URL
+    var atpDirectory:URL
     
     // The STARTUP file string to use when running ATP. If this is nil, it is assumed that the file STARTUP that is located in the same directory as TPBIGS will be used.
     var STARTUP:URL? = nil
     
-    // Designated initializer. Note that no check is done to verify that the URL is actually the executable ATP file. This verification should be made prior to creating the TPBIGS object.
-    init(atpExecutable:URL)
+    // Designated initializer. Note that no check is done to verify that the URL is actually the ATP folder. This verification should be made prior to creating the TPBIGS object.
+    init(atpDirectory:URL)
     {
-        self.atpExecutable = atpExecutable
+        self.atpDirectory = atpDirectory
     }
     
     enum RunAtpError: Error
@@ -317,6 +318,8 @@ class TPBIGS: NSObject
         case NoGraphicsFileError
         case NoGraphicsAuxFileError
         case AtpCouldNotRunError(errorLine:String)
+        
+        case IllegalDataFile
     }
     
     func RunATP(inputFileString:String, arguments:[String] = [], STARTUP_FileString:String? = nil)
@@ -324,8 +327,12 @@ class TPBIGS: NSObject
         
     }
     
+    
+    
     func RunATP(inputURL:URL, arguments:[String] = [], STARTUP_URL:URL? = nil) throws
     {
+        let defFileMgr = FileManager.default
+        
         var useStartupURL = STARTUP_URL
         
         if useStartupURL == nil
@@ -333,10 +340,48 @@ class TPBIGS: NSObject
             useStartupURL = self.STARTUP
         }
         
-        if useStartupURL == nil
+        var replacedStartup = false
+        
+        if useStartupURL != nil
+        {
+            // we're using our own version of STARTUP, so change the name of the old one (if it exists, and it's not the one we're using)
+            let startupURL = self.atpDirectory.appendingPathComponent("STARTUP")
+            
+            if startupURL != useStartupURL!
+            {
+                if defFileMgr.fileExists(atPath: startupURL.path)
+                {
+                    do
+                    {
+                        try defFileMgr.moveItem(at: startupURL, to: startupURL.appendingPathExtension("OLD"))
+                        
+                        try defFileMgr.copyItem(at: useStartupURL!, to: startupURL)
+                        
+                        replacedStartup = true
+                    }
+                    catch
+                    {
+                        DLog("There was a problem replacing STARTUP. The error was: \(error)")
+                    }
+                }
+            }
+        }
+        
+        let atpTask = Process()
+        atpTask.currentDirectoryURL = self.atpDirectory
+        atpTask.executableURL = self.atpDirectory.appendingPathComponent("tpbigs")
+        atpTask.arguments = [inputURL.path]
+        
+        do
+        {
+            try atpTask.run()
+            atpTask.waitUntilExit()
+        }
+        catch
         {
             
         }
+        
         
     }
 
