@@ -382,6 +382,18 @@
                                     <action selector="handleInputCigreDat:" target="JTe-sr-GDH" id="8S5-4r-CZS"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Generate STARTUP" id="Ume-HF-C87">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="handleGenerateStartup:" target="JTe-sr-GDH" id="F3N-EG-u9G"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Test tpbig" id="rpF-Wq-F51">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="handleTestTpbig:" target="JTe-sr-GDH" id="zPT-Mi-s0B"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
@@ -723,7 +735,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="480" height="360"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                 <autoresizingMask key="autoresizingMask"/>

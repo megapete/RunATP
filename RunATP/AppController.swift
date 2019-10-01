@@ -72,5 +72,43 @@ class AppController: NSObject
         }
     }
     
-
+    @IBAction func handleGenerateStartup(_ sender: Any)
+    {
+        let startup = ATP_Startup()
+        let newStartupString = startup.GenerateStartupFile()
+        
+        if let atpUrl = self.tpbigDirectory
+        {
+            let fileUrl = atpUrl.appendingPathComponent("startup")
+            
+            do
+            {
+                try newStartupString.write(to: fileUrl, atomically: false, encoding: .utf8)
+            }
+            catch
+            {
+                DLog("An error occurred while writing STARTUP. The error was: \(error)")
+            }
+        }
+    }
+    
+    @IBAction func handleTestTpbig(_ sender: Any)
+    {
+        let filePath = "/Users/peterhub/Local Docs/atpmac_used/cigre.dat"
+        
+        let fileUrl = URL(fileURLWithPath: filePath)
+        
+        let atpObject = TPBIGS(atpDirectory: self.tpbigDirectory!)
+        
+        do
+        {
+            try atpObject.RunATP(inputURL: fileUrl)
+        }
+        catch
+        {
+            DLog("An error occured: \(error)")
+        }
+    }
+    
+    
 }

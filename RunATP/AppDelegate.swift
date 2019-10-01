@@ -54,8 +54,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let alert = NSAlert()
             
             alert.alertStyle = .critical
-            alert.messageText = "This program will only function if you have already installed a version of ATP on this machine. If you have ATP installed, then click 'Select ATP Folder'. If you have not yet installed ATP, then click Quit, download ATP, and install it before relaunching this program.\n\n"
-            alert.addButton(withTitle: "Select ATP Folder")
+            alert.messageText = "Please select the location where you installed ATP. If you have not yet installed ATP, then click Quit, download ATP, and install it before relaunching this program.\n\n"
+            alert.addButton(withTitle: "Select ATP Location")
             alert.addButton(withTitle: "Quit")
             
             if alert.runModal() == .alertFirstButtonReturn

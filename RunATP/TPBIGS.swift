@@ -24,12 +24,13 @@ struct ATP_Startup
     var EPOMEG:Double = 1.0E-15
     var SZPLT:Double = 10.0
     var SZBED:Double = 72.0
-    var TENFAC:Double = 10.0
+    var TENFLZ:Double = 10.0 // TENFAC in Rulebook
     
-    let Card1Names:[String] = ["RHIGH","EPSZNO","EPWARN","EPSTOP","EPSUBA","EPDGEL","EPOMEG","SZPLT","SZBED","TENFAC"]
+    let Card1Names = "1  RHIGH  EPSZNO  EPWARN  EPSTOP  EPSUBA  EPDGEL  EPOMEG   SZPLT   SZBED  TENFLZ\n"
+    
     
     // Card 2
-    var SIGMAX:Double = 2.0
+    var SIGMAX:Double = 4.0 // from current STARTUP file
     var TENERG:Double = 1.0E20
     var DEGMIN:Double = 0.0
     var DEGMAX:Double = 360.0
@@ -40,24 +41,24 @@ struct ATP_Startup
     var XMAXMX:Double = 2.0
     var AINCR:Double = 0.05
     
-    let Card2Names:[String] = ["SIGMAX","TENERG","DEGMIN","DEGMAX","ZNOMLIM(1)","(2)","STATFR","ZNVREF","XMAXMX","AINCR"]
+    let Card2Names = "2 SIGMAX  TENERG  DEGMIN  DEGMAX  ZNOLIM(1), (2)  STATFR  ZNVREF  XMAXMX   AINCR\n"
     
     // Card 3
     var FREQFR:Double = 0.0 // see Rulebook for why this field is set to 0
     var HLETT1:Double = 0.25
-    // Unused
+    var D4FACT:Double = -2.0 // Rulebook says unused
     var VHS:Double = 8.0
     var VS:Double = 1.0
     var VH:Double = 10.0
-    var TAXISL:Double = 10.0
+    var TAXISL:Double = 20.0
     var VAXISL:Double = 8.0
     var FILL1:Double = 6.0
     var FILL2:Double = 7.0
     
-    let Card3Names:[String] = ["FREQFR","HLETT1","Unused","VHS","VS","VH","TAXISL","VAXISL","FILL1","FILL2"]
+    let Card3Names = "3 FREQFR  HLETT1  D4FACT     VHS      VS      VH  TAXISL  VAXISL   FILL1   FILL2\n"
     
     // Card 4
-    var TOLRCE:Double = 8.0E-5
+    var TOLRCE:Double = 8.0E-5 // for some reason, this field is actually represented with an "E" instead of a "D"
     var FHTAX:Double = 0.5
     var FXSUP:Double = 0.25
     var FYSUP:Double = 0.03
@@ -65,24 +66,24 @@ struct ATP_Startup
     var FYTIT:Double = 0.1
     var VPLOTS:Double = 1.0
     var VPLOTL:Double = 5.0
-    // Unused
+    var FACTVI:Double = 0.0 // Rulebook says Unused
     var FTCARR:Double = 1.5
     
-    let Card4Names:[String] = ["TOLRCE","FHTAX","FXSUP","FYSUP","FXTIT","FYTIT","VPLOTS","VPLOTL","Unused","FTCARR"]
+    let Card4Names = "4 TOLRCE   FHTAX   FXSUP   FYSUP   FXTIT   FYTIT  VPLOTS  VPLOTL  FACTVI  FTCARR\n"
     
     // Card 5
     var FXNUMV:Double = 1.5
     var FXNUMH:Double = 5.0
-    var FVAXTT:Double = -2.5
+    var FVAXTT:Double = -1.5
     var FXVERT:Double = 0.0
-    // Unused
+    var UNIXON:Double = 0.0 // Rulebook says unused
     var TIMTAC:Double = 0.0
     var OVRLAP:Double = 0.5
-    var FLZERO:Double = 1.0E-12
+    var FLZERO:Double = 1.0E-16
     var EPSILN:Double = 1.0E-8
-    var FLTINF:Double = 1.0E19
+    var FLTINF:Double = 1.0E16
     
-    let Card5Names:[String] = ["FXNUMV","FXNUMH","FVAXTT","FXVERT","Unused","TIMTAC","OVRLAP","FLZERO","EPSILN","FLTINF"]
+    let Card5Names = "5 FXNUMV  FXNUMH  FVAXTT  FXVERT  UNIXON  TIMTAC  OVRLAP  FLZERO  EPSILN  FLTINF\n"
     
     // Card 6
     var XHEADM:Double = 2.5
@@ -94,22 +95,22 @@ struct ATP_Startup
     var XLEGND:Double = 0.5
     var YLEGND:Double = 1.3
     var HGTLGN:Double = 0.25
-    var PIXPUN:Int = 40
+    var TSTALL:Double = -0.0 // This is an integer called PIXPUN in the Rulebook
     
-    let Card6Names:[String] = ["XHEADM","YHEADM","HGTHDM","XCASTI","YCASTI","HGTCST","XLEGND","YLEGND","HGTLGN","PIXPUN"]
+    let Card6Names = "6 XHEADM  YHEADM  HGTHDM  XCASTI  YCASTI  HGTCST  XLEGND  YLEGND  HGTLGN  TSTALL\n"
     
     // Card 7
     var XALPHA:Double = 1.5
     var YALPHA:Double = 6.5
     var HGTALF:Double = 0.25
-    var D4FACT:Double = -2.0
+    var D4FACT_2:Double = 1.0 // Redeclaration of same name (D4FACT) in the STARTUP file (differs from Rulebook)
     var PEKEXP:Double = 43.0
     var EPSLRT:Double = 1.0E-12
     var EPSPIV:Double = 1.0E-16
     var PLMARK:Double = 1.0
     var FACOSC:Double = 0.3
     
-    let Card7Names:[String] = ["XALPHA","YALPHA","HGTALF","D4FACT","PEKEXP","EPSLRT","EPSPIV","PLMARK","FACOSC",""]
+    let Card7Names = "7 XALPHA  YALPHA  HGTALF  D4FACT  PEKEXP  EPSLRT  EPSPIV  PLMARK  FACOSC  Unused\n"
     
     // Card 8
     var NMAUTO:Int = 1
@@ -117,13 +118,13 @@ struct ATP_Startup
     var KOL132:Int = 132
     var MUNIT5:Int = 1
     var MAXZNO:Int = 50
-    var IPRSPY:Int = 0
-    var IPRSUP:Int = 0
-    var LNPIN:Int = 6
+    var IPRSPY:Int = -99
+    var IPRSUP:Int = -99
+    var LNPIN:Int = 1
     var MINHAR:Int = 0
     var MAXHAR:Int = 20
     
-    let Card8Names:[String] = ["NMAUTO","INTINF","KOL132","MUNIT5","MAXZNO","IPRSPY","IPRSUP","LNPIN","MINHAR","MAXHAR"]
+    let Card8Names = "8 NMAUTO  INTINF  KOL132  MUNIT5  MAXZNO  IPRSPY  IPRSUP   LNPIN  MINHAR  MAXHAR\n"
     
     // Card 9
     var NFORS2:Int = 30
@@ -137,7 +138,7 @@ struct ATP_Startup
     var KPEN_2:Int = 10 // Name in STARTUP: KPEN(2)
     var KPEN_3:Int = 11 // Name in STARTUP: KPEN(3)
     
-    let Card9Names:[String] = ["NFORS2","NIOMAX","MRGN","LINLIM","MPAGE","MODE28","KPGRID","KPEN(1)","KPEN(2)","KPEN(3)"]
+    let Card9Names = "9 NFORS2  NIOMAX    MRGN  LINLIM   MPAGE  MODE28  KPGRID KPEN(1) KPEN(2) KPEN(3)\n"
     
     // Card 10
     var KPEN_4:Int = 14 // Name in STARTUP: ..(4)
@@ -146,26 +147,26 @@ struct ATP_Startup
     var MODSCR:Int = 2
     var KOLALP:Int = 5
     var MAXFLG:Int = 1
-    var LIMCRD:Int = 3000
-    var NOBLAN:Int = 1
+    var LIMCRD:Int = 10000
+    var NOBLAN:Int = 0
     var MOUSET:Int = 0
     var NOTPPL:Int = 1
     
-    let Card10Names:[String] = ["..(4)","KOMLEV","NSMTH","MODSCR","KOLALP","MAXFLG","LIMCRD","NOBLAN","MOUSET","NOTPPL"]
+    let Card10Names = "10 ..(4)  KOMLEV   NSMTH  MODSCR  KOLALP  MAXFLG  LIMCRD  NOBLAN  MOUSET  NOTPPL\n"
     
     // Card 11
     var NOCOMM:Int = 0
     var NOHELP:Int = 0
     var NEWPL4:Int = 0
     var JDELAY:Int = 0
-    // Unused
+    var NOTMAX:Int = 0 // Rulebook says "Unused"
     var NSMPLT:Int = 50
     var KOLWID:Int = 11
     var KOLSEP:Int = 1
     var JCOLU1:Int = 0
-    var KSLOWR:Int = 5
+    var KSLOWR:Int = 25
     
-    let Card11Names:[String] = ["NOCOMM","NOHELP","NEWPL4","JDELAY","Unused","NSMPLT","KOLWID","KOLSEP","JCOLU1","KSLOWR"]
+    let Card11Names = "1 NOCOMM  NOHELP  NEWPL4  JDELAY  NOTMAX  NSMPLT  KOLWID  KOLSEP  JCOLU1  KSLOWR\n"
     
     // Card 12
     var KSYMBL:Int = 200
@@ -179,11 +180,11 @@ struct ATP_Startup
     var NODPCX:Int = 0
     var LCHLIM:Int = 0
     
-    let Card12Names:[String] = ["KSYMBL","NOBACK","KOLEXM","LTEK","NCUT1","NCUT2","INCHPX","INCHPY","NODPCX","LCHLIM"]
+    let Card12Names = "2 KSYMBL  NOBACK  KOLEXM    LTEK   NCUT1   NCUT2  INCHPX  INCHPY  NODPCX  LCHLIM\n"
     
     // Card 13
     var NORUN:Int = 0
-    var JTURBO:Int = 1
+    var JTURBO:Int = 5
     var MAXSYM:Int = 3
     var IHS:Int = 3
     var LIMCOL:Int = 79
@@ -191,23 +192,23 @@ struct ATP_Startup
     var KEXTR:Int = 0
     var NOHPGL:Int = 0
     var NOPOST:Int = 0
-    var IZGR1:Int = 2
+    var NOSM59:Int = 0
     
-    let Card13Names:[String] = ["NORUN","JTURBO","MAXSYM","IHS","LIMCOL","KLEVL","KEXTR","NOHPGL","NOPOST","IZGR1"]
+    let Card13Names = "13 NORUN  JTURBO  MAXSYM     IHS  LIMCOL   KLEVL   KEXTR  NOHPGL  NOPOST  NOSM59\n"
     
     // Card 14
-    var IZGR2:Int = 0
+    var LEFTA6:Int = 0 // IZGR2 in Rulebook
     var LENREC:Int = 0
-    var LU6VRT:Int = 32768
+    var LU6VRT:Int = 0 // actually, blank in STARTUP
     var LRLIM:Int = 75
     var KASEND:Int = 5
     var LUNDAT:Int = 3
-    var KTRPL4:Int = -4
+    var KTRPL4:Int = -6666
     var JORIEN:Int = 0
     var LIMPNL:Int = 200
     var LUNTEX:Int = -11
     
-    let Card14Names:[String] = ["IZGR2","LENREC","LU6VRT","LRLIM","KASEND","LUNDAT","KTRPL4","JORIEN","LIMPNL","LUNTEX"]
+    let Card14Names = "4 LEFTA6  LENREC  LU6VRT   LRLIM  KASEND  LUNDAT  KTRPL4  JORIEN  LIMPNL  LUNTEX\n"
     
     // Card 15
     var KINSEN:Int = 1
@@ -215,10 +216,13 @@ struct ATP_Startup
     var LIMTAC:Int = 25
     var NOCALC:Int = 0
     var MFLUSH:Int = 1000
-    var L4BYTE:Int = 1
+    var L4BYTE:Int = 0
     var KOMPAR:Int = 0
+    var LIST01:Int = 0 // Does not exist in Rulebook
+    var NOGNU:Int = 0 // Does not exist in Rulebook
+    var KROSEC:Int = 0 // Does not exist in Rulebook
     
-    let Card15Names:[String] = ["KINSEN","LISTON","LIMTAC","NOCALC","MFLUSH","L4BYTE","KOMPAR","","",""]
+    let Card15Names = "5 KINSEN  LISTON  LIMTAC  NOCALC  MFLUSH  L4BYTE  KOMPAR  LIST01   NOGNU  KROSEC\n"
     
     // Card 16
     var LUNIT1:Int = 21
@@ -232,7 +236,7 @@ struct ATP_Startup
     var LUNIT9:Int = 9
     var LUNT10:Int = 10
     
-    let Card16Names:[String] = ["LUNIT1","LUNIT2","LUNIT3","LUNIT4","LUNIT5","LUNIT6","LUNIT7","LUNIT8","LUNIT9","LUNT10"]
+    let Card16Names = "6 LUNIT1  LUNIT2  LUNIT3  LUNIT4  LUNIT5  LUNIT6  LUNIT7  LUNIT8  LUNIT9  LUNT10\n"
     
     // Card 17
     var KS_1:Int = 0
@@ -244,16 +248,31 @@ struct ATP_Startup
     var KP_3:Int = 0
     var KP_4:Int = 0
     var KOLROV:Int = 18
+    var NUMHLD:Int = 0 // actually, blank in STARTUP
     
-    let Card17Names:[String] = ["KS(1)","KS(2)","KS(3)","KS(4)","KP(1)","KP(2)","KP(3)","KP(4)","KOLROV","Unused"]
+    let Card17Names = "17 KS(1)   KS(2)   KS(3)   KS(4)   KP(1)   KP(2)   KP(3)   KP(4)  KOLROV  NUMHLD\n"
     
-    // Card 18
+    // Card 18-1 (STARTUP ONLY)
+    var L4FULL:Int = 0
+    var NOQUOT:Int = 0
+    var JJEATS:Int = 0
+    var NUMBUS:Int = -1
+    var NOTAB:Int = 0
+    var NOPISA:Int = 1
+    var MSCSV:Int = 0
+    var MAXL31:Int = 400
+    var LIM132:Int = 0
+    var MAXMVC:Int = 80
+    
+    let Card18_0Names = "8 L4FULL  NOQUOT  JJEATS  NUMBUS   NOTAB  NOPISA   MSCSV  MAXL31  LIM132  MAXMVC\n"
+    
+    // Card 18 (Rulebook and STARTUP)
     // Note that these variables & names come from the STARTUP file that comes with ATP as of Sept. 29, 2019 (the names and values differ somewhat from the Rulebook)
     var NameOfLanguageFontFile:String = "/blockd51.bin"
     var Window:String = "junk"
     var SpyFileName:String = "inclspy .dat"
     
-    let Card18Names:[String] = ["Name of language font file  ] ","Window] ","Root name for SPY @K usage    ]"]
+    let Card18_1Names = "18 Name of language font file  ] Window] Root name for SPY @K usage    ]\n"
     
     // Card 19
     var SSONLY:String = "PHASOR"
@@ -262,37 +281,170 @@ struct ATP_Startup
     var CHVBAR:String = "|"
     var BRANCH:String = "NAME"
     var TXCOPY:String = "COPY"
-    var USERID:String = "Hannov" // This comes from the default STARTUP file, which differs from the Rulebook
+    var USERID:String = "PCH" // I turned this into my abbreviaiton
     var TRASH:String = "......"
     var TERRA:String = "TERRA"
     var CHRCOM:String = "C {}$,"
     
-    let Card19Names:[String] = ["SSONLY","CHEFLD","TEXNAM","CHVBAR","BRANCH","TXCOPY","USERID","-TRASH","-TERRA","CHRCOM"]
+    let Card19Names = "9 SSONLY  CHEFLD  TEXNAM  CHVBAR  BRANCH  TXCOPY  USERID  -TRASH  -TERRA  CHRCOM\n"
     
     // Card 20
     var DATTYP:String = ".dat"
-    var LISTYP:String = "lis"
-    var PCHTYP:String = "pch"
-    var PL4TYP:String = "pl4"
+    var LISTYP:String = ".lis"
+    var PCHTYP:String = ".pch"
+    var PL4TYP:String = ".pl4"
     var EFIELD:String = ""
-    var FMTPL4:String = "10E8.0"
+    var FMTPL4:String = "wide10" // from a listserver thread answered by Orlando, to get text output for .pl4 file
     var PSCTYP:String = ".ps"
     // The next three vars come from the default STARTUP file
-    var DBGTYP:String = "dbg"
+    var DBGTYP:String = ".dbg"
     var BINTYP:String = ".bin"
     var EXTTYP:String = ".ext"
     
-    let Card20Names:[String] = ["DATTYP","LISTYP","PCHTYP","PL4TYP","EFIELD","FMTPL4","PSCTYP","DBGTYP","BINTYP","EXTTYP"]
+    let Card20Names = "0 DATTYP  LISTYP  PCHTYP  PL4TYP  EFIELD  FMTPL4  PSCTYP  DBGTYP  BINTYP  EXTTYP\n"
     
+    /*
     init(startupFile:URL)
     {
         // This function will initialize the ATP_Startup structure using the given file
     }
+ */
     
     func GenerateStartupFile() -> String
     {
         // Generate a STARTUP file using the current values in the structure and return it as a string
-        return ""
+        var startup = ""
+        
+        // Line 1
+        startup += Card1Names
+        // DLog("So far: \(startup)")
+        let doublesFormat = "%8.3G%8.3G%8.3G%8.3G%8.3G%8.3G%8.3G%8.3G%8.3G%8.3G\n"
+        let line1 = String(format: doublesFormat, RHIGH, EPSZNO, EPWARN, EPSTOP, EPSUBA, EPDGEL, EPOMEG, SZPLT, SZBED, TENFLZ)
+        startup += line1
+        
+        // Line 2
+        startup += Card2Names
+        startup += String(format: doublesFormat, SIGMAX, TENERG, DEGMIN, DEGMAX, ZNOMLIM_1, ZNOMLIM_2, STATFR, ZNVREF, XMAXMX, AINCR)
+        
+        // Line 3
+        startup += Card3Names
+        startup += String(format: doublesFormat, FREQFR, HLETT1, D4FACT, VHS, VS, VH, TAXISL, VAXISL, FILL1, FILL2)
+        
+        // Line 4
+        startup += Card4Names
+        startup += String(format: doublesFormat, TOLRCE, FHTAX, FXSUP, FYSUP, FXTIT, FYTIT, VPLOTS, VPLOTL, FACTVI, FTCARR)
+        
+        // Line 5
+        startup += Card5Names
+        startup += String(format: doublesFormat, FXNUMV, FXNUMH, FVAXTT, FXVERT, UNIXON, TIMTAC, OVRLAP, FLZERO, EPSILN, FLTINF)
+        
+        // Line 6
+        startup += Card6Names
+        startup += String(format: doublesFormat, XHEADM, YHEADM, HGTHDM, XCASTI, YCASTI, HGTCST, XLEGND, YLEGND, HGTLGN, TSTALL)
+        
+        // Line 7
+        startup += Card7Names
+        startup += String(format: doublesFormat, XALPHA, YALPHA, HGTALF, D4FACT_2, PEKEXP, EPSLRT, EPSPIV, PLMARK, FACOSC, 0)
+        
+        // Line 8
+        startup += Card8Names
+        let integerFormat = "%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d\n"
+        startup += String(format: integerFormat, NMAUTO, INTINF, KOL132, MUNIT5, MAXZNO, IPRSPY, IPRSUP, LNPIN, MINHAR, MAXHAR)
+        
+        // Line 9
+        startup += Card9Names
+        startup += String(format:integerFormat, NFORS2, NIOMAX, MRGN, LINLIM, MPAGE, MODE28, KPGRID, KPEN_1, KPEN_2, KPEN_3)
+        
+        // Line 10
+        startup += Card10Names
+        startup += String(format:integerFormat, KPEN_4, KOMLEV, NSMTH, MODSCR, KOLALP, MAXFLG, LIMCRD, NOBLAN, MOUSET, NOTPPL)
+        
+        // Line 11
+        startup += Card11Names
+        startup += String(format:integerFormat, NOCOMM, NOHELP, NEWPL4, JDELAY, NOTMAX, NSMPLT, KOLWID, KOLSEP, JCOLU1, KSLOWR)
+        
+        // line 12
+        startup += Card12Names
+        startup += String(format:integerFormat, KSYMBL, NOBACK, KOLEXM, LTEK, NCUT1, NCUT2, INCHPX, INCHPY, NODPCX, LCHLIM)
+        
+        // Line 13
+        startup += Card13Names
+        startup += String(format:integerFormat, NORUN, JTURBO, MAXSYM, IHS, LIMCOL, KLEVL, KEXTR, NOHPGL, NOPOST, NOSM59)
+        
+        // Line 14
+        startup += Card14Names
+        startup += String(format:integerFormat, LEFTA6, LENREC, LU6VRT, LRLIM, KASEND, LUNDAT, KTRPL4, JORIEN, LIMPNL, LUNTEX)
+        
+        // Line 15
+        startup += Card15Names
+        startup += String(format:integerFormat, KINSEN, LISTON, LIMTAC, NOCALC, MFLUSH, L4BYTE, KOMPAR, LIST01, NOGNU, KROSEC)
+        
+        // Line 16
+        startup += Card16Names
+        startup += String(format:integerFormat, LUNIT1, LUNIT2, LUNIT3, LUNIT4, LUNIT5, LUNIT6, LUNIT7, LUNIT8, LUNIT9, LUNT10)
+        
+        // Line 17
+        startup += Card17Names
+        startup += String(format:integerFormat, KS_1, KS_2, KS_3, KS_4, KP_1, KP_2, KP_3, KP_4, KOLROV, NUMHLD)
+        
+        // Line 18(0)
+        startup += Card18_0Names
+        startup += String(format:integerFormat, L4FULL, NOQUOT, JJEATS, NUMBUS, NOTAB, NOPISA, MSCSV, MAXL31, LIM132, MAXMVC)
+        
+        // Line 18(1) (The lastfew lines are gross because we can't set the length of a Swift String in 'format')
+        startup += Card18_1Names
+        var numSpaces = 33 - NameOfLanguageFontFile.count
+        var spaceString = String(repeating: " ", count: numSpaces)
+        startup += NameOfLanguageFontFile + spaceString
+        
+        numSpaces = 8 - Window.count
+        spaceString = String(repeating: " ", count: numSpaces)
+        startup += Window + spaceString
+        startup += SpyFileName + "\n"
+        
+        // Line 19
+        startup += Card19Names
+        
+        startup += "  " + LeftJustifyString(wString: SSONLY, width: 8)
+        startup += LeftJustifyString(wString: CHEFLD, width: 8)
+        startup += LeftJustifyString(wString: TEXNAM, width: 8)
+        startup += LeftJustifyString(wString: CHVBAR, width: 8)
+        startup += LeftJustifyString(wString: BRANCH, width: 8)
+        startup += LeftJustifyString(wString: TXCOPY, width: 8)
+        startup += LeftJustifyString(wString: USERID, width: 8)
+        startup += LeftJustifyString(wString: TRASH, width: 8)
+        startup += LeftJustifyString(wString: TERRA, width: 8)
+        startup += LeftJustifyString(wString: CHRCOM, width: 6)
+        startup += "\n"
+        
+        // Line 20
+        startup += Card20Names
+        
+        startup += "  " + LeftJustifyString(wString: DATTYP, width: 8)
+        startup += LeftJustifyString(wString: LISTYP, width: 8)
+        startup += LeftJustifyString(wString: PCHTYP, width: 8)
+        startup += LeftJustifyString(wString: PL4TYP, width: 8)
+        startup += LeftJustifyString(wString: EFIELD, width: 8)
+        startup += LeftJustifyString(wString: FMTPL4, width: 8)
+        startup += LeftJustifyString(wString: PSCTYP, width: 8)
+        startup += LeftJustifyString(wString: DBGTYP, width: 8)
+        startup += LeftJustifyString(wString: BINTYP, width: 8)
+        startup += LeftJustifyString(wString: EXTTYP, width: 6)
+        startup += "\n"
+        
+        return startup
+    }
+    
+    func LeftJustifyString(wString:String, width:Int) -> String
+    {
+        let numSpaces = width - wString.count
+        
+        if numSpaces <= 0
+        {
+            return wString
+        }
+        
+        return wString + String(repeating: " ", count: numSpaces)
     }
     
 }
@@ -345,7 +497,7 @@ class TPBIGS: NSObject
         if useStartupURL != nil
         {
             // we're using our own version of STARTUP, so change the name of the old one (if it exists, and it's not the one we're using)
-            let startupURL = self.atpDirectory.appendingPathComponent("STARTUP")
+            let startupURL = self.atpDirectory.appendingPathComponent("startup")
             
             if startupURL != useStartupURL!
             {
@@ -353,7 +505,7 @@ class TPBIGS: NSObject
                 {
                     do
                     {
-                        try defFileMgr.moveItem(at: startupURL, to: startupURL.appendingPathExtension("OLD"))
+                        try defFileMgr.moveItem(at: startupURL, to: startupURL.appendingPathExtension("old"))
                         
                         try defFileMgr.copyItem(at: useStartupURL!, to: startupURL)
                         
@@ -362,6 +514,7 @@ class TPBIGS: NSObject
                     catch
                     {
                         DLog("There was a problem replacing STARTUP. The error was: \(error)")
+                        throw(error)
                     }
                 }
             }
@@ -369,7 +522,7 @@ class TPBIGS: NSObject
         
         let atpTask = Process()
         atpTask.currentDirectoryURL = self.atpDirectory
-        atpTask.executableURL = self.atpDirectory.appendingPathComponent("tpbigs")
+        atpTask.executableURL = self.atpDirectory.appendingPathComponent("tpgigs")
         atpTask.arguments = [inputURL.path]
         
         do
@@ -379,7 +532,8 @@ class TPBIGS: NSObject
         }
         catch
         {
-            
+            DLog("Error while running ATP task: The error was: \(error)")
+            throw(error)
         }
         
         
