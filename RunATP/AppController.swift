@@ -79,7 +79,7 @@ class AppController: NSObject
         
         if let atpUrl = self.tpbigDirectory
         {
-            let fileUrl = atpUrl.appendingPathComponent("startup")
+            let fileUrl = atpUrl.appendingPathComponent("pch_startup")
             
             do
             {
@@ -94,11 +94,15 @@ class AppController: NSObject
     
     @IBAction func handleTestTpbig(_ sender: Any)
     {
-        let filePath = "/Users/peterhub/Local Docs/atpmac_used/cigre.dat"
+        let filePath = "/Users/peterhub/Local Docs/ATP_test/cigre.dat"
         
         let fileUrl = URL(fileURLWithPath: filePath)
         
         let atpObject = TPBIGS(atpDirectory: self.tpbigDirectory!)
+        
+        handleGenerateStartup(self)
+        
+        atpObject.STARTUP = self.tpbigDirectory!.appendingPathComponent("pch_startup")
         
         do
         {

@@ -9,6 +9,10 @@
 import Foundation
 import Cocoa
 
+// Global values for to access the temporary input and output files. It is assumed that these files are actually stored in the user's temporary directory (as returned by FileManager)
+let PCH_ATP_TEMPORARY_DIRECTORY = "PCH_ATP"
+let PCH_ATP_TEMPORARY_FILE_PREFIX = "pch_run_atp"
+
 struct ATP_Startup
 {
     // The names of the members of this struct are the same as the names in the STARTUP file in the ATP Rulebook, except where noted
@@ -472,26 +476,26 @@ class TPBIGS: NSObject
         case AtpCouldNotRunError(errorLine:String)
         
         case IllegalDataFile
+        case FileSystemError
+        case TaskRunError
     }
-    
-    func RunATP(inputFileString:String, arguments:[String] = [], STARTUP_FileString:String? = nil)
-    {
-        
-    }
-    
     
     
     func RunATP(inputURL:URL, arguments:[String] = [], STARTUP_URL:URL? = nil) throws
     {
+        // we'll need this a few times
         let defFileMgr = FileManager.default
         
+        // check if there was a new STARTUP file passed to the function
         var useStartupURL = STARTUP_URL
         
+        // nope, check if we have a valid STARTUP URL attached to self
         if useStartupURL == nil
         {
             useStartupURL = self.STARTUP
         }
         
+        // we'll use this flag later to reset the name of any existing STARTUP file that we changed
         var replacedStartup = false
         
         if useStartupURL != nil
@@ -499,31 +503,83 @@ class TPBIGS: NSObject
             // we're using our own version of STARTUP, so change the name of the old one (if it exists, and it's not the one we're using)
             let startupURL = self.atpDirectory.appendingPathComponent("startup")
             
+            // make sure the user didn't simply send in the STARTUP file that's already in the ATP folder
             if startupURL != useStartupURL!
             {
+                // confirm that the file actually exists
                 if defFileMgr.fileExists(atPath: startupURL.path)
                 {
                     do
                     {
+                        // add the extension "old" to the existing startup file
                         try defFileMgr.moveItem(at: startupURL, to: startupURL.appendingPathExtension("old"))
                         
+                        // copy the custom STARTUP over to the ATP folder with the name STARTUP
                         try defFileMgr.copyItem(at: useStartupURL!, to: startupURL)
                         
+                        // flag so that we can rename the old file at the end
                         replacedStartup = true
                     }
                     catch
                     {
                         DLog("There was a problem replacing STARTUP. The error was: \(error)")
-                        throw(error)
+                        throw(RunAtpError.FileSystemError)
                     }
                 }
             }
         }
         
+        // We'll actually always run a temporary file called "pch_run_atp.dat", regardless of the file passed to this routine. We access a folder called "PCH_ATP" which is in the user's temporary directory (we create the directory if it does not yet exist) and put the file in there. The calling routine is responsible for the following:
+        
+        //  1) Making reasonably sure that the file is a valid ATP file
+        //  2) Saving the resulting output files, all of which will have the prefix "pch_run_atp" and be located in the temporary folder.
+        
+        // Get the temporary directory for the current user
+        let tmpDir = defFileMgr.temporaryDirectory.appendingPathComponent(PCH_ATP_TEMPORARY_DIRECTORY, isDirectory: true)
+        if !defFileMgr.fileExists(atPath: tmpDir.path)
+        {
+            do
+            {
+                try defFileMgr.createDirectory(at: tmpDir, withIntermediateDirectories: true, attributes: nil)
+            }
+            catch
+            {
+                DLog("Could not create temporary directory. The error was: \(error)")
+                throw(RunAtpError.FileSystemError)
+            }
+        }
+        
+        let tmpInputUrl = tmpDir.appendingPathComponent(PCH_ATP_TEMPORARY_FILE_PREFIX + ".dat")
+        
+        if defFileMgr.fileExists(atPath: tmpInputUrl.path)
+        {
+            do
+            {
+                try defFileMgr.removeItem(at: tmpInputUrl)
+            }
+            catch
+            {
+                DLog("Could not remove existing input file. The error was: \(error)")
+                throw(RunAtpError.FileSystemError)
+            }
+        }
+        
+        // copy the input file over to the temporary file
+        do
+        {
+            try defFileMgr.copyItem(at: inputURL, to: tmpInputUrl)
+        }
+        catch
+        {
+            DLog("Could not copy the input file. The error was: \(error)")
+            throw(RunAtpError.FileSystemError)
+        }
+        
+        // run tpbigs
         let atpTask = Process()
         atpTask.currentDirectoryURL = self.atpDirectory
-        atpTask.executableURL = self.atpDirectory.appendingPathComponent("tpgigs")
-        atpTask.arguments = [inputURL.path]
+        atpTask.executableURL = self.atpDirectory.appendingPathComponent("tpbigs")
+        atpTask.arguments = ["DISK", tmpInputUrl.path, "s", "-r"]
         
         do
         {
@@ -533,9 +589,26 @@ class TPBIGS: NSObject
         catch
         {
             DLog("Error while running ATP task: The error was: \(error)")
-            throw(error)
+            throw(RunAtpError.TaskRunError)
         }
         
+        // check if we used a custom STARTUP and if so, fix the old one so everything is okay again
+        if replacedStartup
+        {
+            do
+            {
+                let startupURL = self.atpDirectory.appendingPathComponent("startup")
+                let oldStartupURL = self.atpDirectory.appendingPathComponent("startup.old")
+                
+                try defFileMgr.removeItem(at: startupURL)
+                try defFileMgr.moveItem(at: oldStartupURL, to: startupURL)
+            }
+            catch
+            {
+                DLog("An error occurred: \(error)")
+                throw(RunAtpError.FileSystemError)
+            }
+        }
         
     }
 
