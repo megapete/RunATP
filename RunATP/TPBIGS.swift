@@ -610,6 +610,51 @@ class TPBIGS: NSObject
             }
         }
         
+        let lisCheck = CheckLisFileForError(lisFile: tmpDir.appendingPathComponent(PCH_ATP_TEMPORARY_FILE_PREFIX + ".lis"))
+        
+        if (lisCheck.errNum != LisError.NoError.rawValue)
+        {
+            throw(RunAtpError.AtpError(errorLine: ""))
+        }
+    }
+    
+    enum LisError:Int
+    {
+        case NoError = 0
+        case FileSystemError = 1
+        case NoLisFile = 2
+        case AtpErrorBase = 100
+    }
+    
+    func CheckLisFileForError(lisFile:URL) -> (errNum:Int, errString:String)
+    {
+        if !FileManager.default.fileExists(atPath: lisFile.path)
+        {
+            DLog("LIS file does not exist!")
+            
+            return (LisError.NoLisFile.rawValue, "LIS File does not exist")
+        }
+        
+        var lisFileString = ""
+        
+        do
+        {
+            lisFileString = try String(contentsOf: lisFile)
+        }
+        catch
+        {
+            DLog("Error accessing LIS file: \(error)")
+            
+            return (LisError.FileSystemError.rawValue, "\(error)")
+        }
+        
+        if lisFileString.contains("ERROR/ERROR/ERROR")
+        {
+            // This should be a LOT more complicated than this and scan the reason for the error from the LIS file and return it.
+            return(LisError.AtpErrorBase.rawValue, "See LIS file for details")
+        }
+        
+        return (LisError.NoError.rawValue, "")
     }
 
 }

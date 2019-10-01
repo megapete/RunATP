@@ -6,6 +6,7 @@
 //  Copyright © 2019 Peter Huber. All rights reserved.
 //
 
+import Foundation
 import Cocoa
 
 class AppController: NSObject
@@ -44,6 +45,44 @@ class AppController: NSObject
         DLog("Full path to ATP directory: \(self.tpbigDirectory!.path)")
         
     }
+    
+    @IBAction func hanldeOpenAtpFile(_ sender: Any)
+    {
+        let openPanel = NSOpenPanel()
+        openPanel.allowedFileTypes = ["dat", "txt"]
+        
+        if openPanel.runModal() == .OK
+        {
+            guard let theUrl = openPanel.url else
+            {
+                DLog("File System Error!!")
+                return
+            }
+            
+            var fileString = ""
+            
+            do
+            {
+                fileString = try String(contentsOf: theUrl)
+            }
+            catch
+            {
+                let alert = NSAlert(error: error)
+                let _ = alert.runModal()
+                
+                return
+            }
+            
+            
+        }
+        
+    }
+    
+    func ValidateAtpFile(fileString:String) -> Bool
+    {
+        return fileString.contains("BEGIN NEW DATA CASE")
+    }
+    
     
     // Debug Menu handlers
     @IBAction func handleResetAtpLocation(_ sender: Any)
