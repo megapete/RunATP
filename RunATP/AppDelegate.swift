@@ -7,6 +7,8 @@
 //
 
 let atpUrlBookmarkKey = "PCH_ATP_URL_BOOKMARK"
+let atpStartingFontNameKey = "PCH_ATP_STARTING_FONT"
+let atpStartingFontSizeKey = "PCH_ATP_STARTING_FONT_SIZE"
 
 import Cocoa
 

@@ -9,9 +9,44 @@
 import Foundation
 import Cocoa
 
-class AppController: NSObject
+class AppController: NSObject, NSWindowDelegate
 {
     var tpbigDirectory:URL? = nil
+    
+    @IBOutlet var atpFileView: NSTextView!
+    
+    // Set up some default stuff for our document window
+    override func awakeFromNib()
+    {
+        if let startFontName = UserDefaults.standard.object(forKey: atpStartingFontNameKey) as? String
+        {
+            let startFontSize = UserDefaults.standard.double(forKey: atpStartingFontSizeKey)
+            
+            if let textFont = NSFont(name: startFontName, size: CGFloat(startFontSize))
+            {
+                self.atpFileView.font = textFont
+            }
+        }
+        else
+        {
+            if let textFont = NSFont(name: "Menlo", size: 12.0)
+            {
+                self.atpFileView.font = textFont
+            }
+            else if #available(OSX 10.15, *)
+            {
+                self.atpFileView.font = NSFont.monospacedSystemFont(ofSize: 12.0, weight: .regular)
+            }
+            else if let textFont = NSFont(name: "Courier-New", size: 12.0)
+            {
+                self.atpFileView.font = textFont
+            }
+        }
+        
+        atpFileView.isHidden = false
+    }
+    
+    
     
     // Menu handlers
     @IBAction func handleSetATPLocation(_ sender: Any)
@@ -64,6 +99,19 @@ class AppController: NSObject
             do
             {
                 fileString = try String(contentsOf: theUrl)
+                
+                if !ValidateAtpFile(fileString: fileString)
+                {
+                    let alert = NSAlert()
+                    alert.messageText = "This does not appear to be a valid ATP file. Do you still want to open it?"
+                    alert.addButton(withTitle: "No")
+                    alert.addButton(withTitle: "Yes, open it")
+                    
+                    if alert.runModal() == .alertFirstButtonReturn
+                    {
+                        return
+                    }
+                }
             }
             catch
             {
@@ -73,7 +121,8 @@ class AppController: NSObject
                 return
             }
             
-            
+            self.atpFileView.string = fileString
+            self.atpFileView.needsDisplay = true
         }
         
     }
