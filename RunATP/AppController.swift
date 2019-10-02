@@ -9,11 +9,24 @@
 import Foundation
 import Cocoa
 
-class AppController: NSObject, NSWindowDelegate
+class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextViewDelegate
 {
+        
+    // The directory where ATP (in the form of tpbigs) is located
     var tpbigDirectory:URL? = nil
     
+    // The text view of the file currently in memory
     @IBOutlet var atpFileView: NSTextView!
+    
+    // The ATP file window
+    @IBOutlet weak var atpFileWindow: NSWindow!
+    
+    // The current view's text has been edited
+    var currentAtpTextIsDirty = false
+    
+    // The URL of the last-opened file
+    var lastOpenedFile:URL? = nil
+    
     
     // Set up some default stuff for our document window
     override func awakeFromNib()
@@ -43,12 +56,46 @@ class AppController: NSObject, NSWindowDelegate
             }
         }
         
+        atpFileView.delegate = self
         atpFileView.isHidden = false
+    }
+    
+    // MARK: Menu item accessors
+    @IBOutlet weak var fileSaveMenuItem: NSMenuItem!
+    @IBOutlet weak var fileSaveAsMenuItem: NSMenuItem!
+    @IBOutlet weak var fileRevertToSavedMenuItem: NSMenuItem!
+    
+    @IBOutlet weak var runAtpMenuItem: NSMenuItem!
+    
+    // Menu item validation
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool
+    {
+        if menuItem == self.fileSaveMenuItem
+        {
+            return self.currentAtpTextIsDirty
+        }
+        
+        if menuItem == self.fileRevertToSavedMenuItem
+        {
+            return self.lastOpenedFile != nil && self.currentAtpTextIsDirty
+        }
+        
+        if menuItem == self.fileSaveAsMenuItem
+        {
+            return self.lastOpenedFile != nil || self.currentAtpTextIsDirty
+        }
+        
+        if menuItem == self.runAtpMenuItem
+        {
+            return self.lastOpenedFile != nil && self.tpbigDirectory != nil
+        }
+        
+        return true
     }
     
     
     
-    // Menu handlers
+    // MARK: Menu handlers
     @IBAction func handleSetATPLocation(_ sender: Any)
     {
         let openPanel = NSOpenPanel()
@@ -81,8 +128,33 @@ class AppController: NSObject, NSWindowDelegate
         
     }
     
-    @IBAction func hanldeOpenAtpFile(_ sender: Any)
+    @IBAction func handleOpenAtpFile(_ sender: Any)
     {
+        // first we check if the current file (if any) is dirty and offer the user a chance to save
+        if self.currentAtpTextIsDirty
+        {
+            let saveAlert = NSAlert()
+            
+            let fileName = self.lastOpenedFile == nil ? "untitled.dat" : self.atpFileWindow.title
+            
+            saveAlert.messageText = "Save changes to '\(fileName)' before closing?"
+            saveAlert.informativeText = "If you don't save, your changes will be lost."
+            
+            saveAlert.addButton(withTitle: "Save")
+            saveAlert.addButton(withTitle: "Cancel")
+            saveAlert.addButton(withTitle: "Don't Save")
+            
+            let runResult = saveAlert.runModal()
+            if runResult == .alertFirstButtonReturn
+            {
+                handleSaveAtpFile(sender)
+            }
+            else if runResult == .alertSecondButtonReturn
+            {
+                return
+            }
+        }
+        
         let openPanel = NSOpenPanel()
         openPanel.allowedFileTypes = ["dat", "txt"]
         
@@ -121,19 +193,345 @@ class AppController: NSObject, NSWindowDelegate
                 return
             }
             
+            self.atpFileWindow.title = theUrl.lastPathComponent
+            self.lastOpenedFile = theUrl
             self.atpFileView.string = fileString
             self.atpFileView.needsDisplay = true
+            NSDocumentController.shared.noteNewRecentDocumentURL(theUrl)
+        }
+        
+    }
+    
+    @IBAction func handleCloseAtpFile(_ sender: Any)
+    {
+        if self.currentAtpTextIsDirty
+        {
+            let saveAlert = NSAlert()
+            
+            let fileName = self.lastOpenedFile == nil ? "untitled.dat" : self.atpFileWindow.title
+            
+            saveAlert.messageText = "Save changes to '\(fileName)' before closing?"
+            saveAlert.informativeText = "If you don't save, your changes will be lost."
+            
+            saveAlert.addButton(withTitle: "Save")
+            saveAlert.addButton(withTitle: "Cancel")
+            saveAlert.addButton(withTitle: "Don't Save")
+            
+            let runResult = saveAlert.runModal()
+            if runResult == .alertFirstButtonReturn
+            {
+                handleSaveAtpFile(sender)
+            }
+            else if runResult == .alertSecondButtonReturn
+            {
+                return
+            }
+            
+            self.lastOpenedFile = nil
+            self.currentAtpTextIsDirty = false
+            self.atpFileView.string = ""
+            self.atpFileView.needsDisplay = true
+            self.atpFileWindow.title = "untitled.dat"
+        }
+    }
+    
+    
+    @IBAction func handleSaveAtpFile(_ sender: Any)
+    {
+        guard let theUrl = self.lastOpenedFile else
+        {
+            DLog("The file hasn't been saved yet, doing 'Save As' instead")
+            handleSaveAsAtpFile(sender)
+            return
+        }
+        
+        let fileMgr = FileManager.default
+        let tempFileUrl = theUrl.deletingLastPathComponent().appendingPathComponent("new")
+        
+        do
+        {
+            try self.atpFileView.string.write(to: tempFileUrl, atomically: false, encoding: .utf8)
+        }
+        catch
+        {
+            let alert = NSAlert(error: error)
+            let _ = alert.runModal()
+            return
+        }
+        
+        // make sure the original file still exists before deleting it
+        if fileMgr.fileExists(atPath: theUrl.path)
+        {
+            do
+            {
+                try fileMgr.removeItem(at: theUrl)
+                try fileMgr.moveItem(at: tempFileUrl, to: theUrl)
+            }
+            catch
+            {
+                let alert = NSAlert(error: error)
+                let _ = alert.runModal()
+                return
+            }
+        }
+        
+        // self.atpFileView.needsDisplay = true
+        self.currentAtpTextIsDirty = false
+    }
+    
+    @IBAction func handleSaveAsAtpFile(_ sender: Any)
+    {
+        let saveAsAlert = NSSavePanel()
+        
+        saveAsAlert.allowedFileTypes = ["dat"]
+        
+        if saveAsAlert.runModal() == .OK
+        {
+            let fileMgr = FileManager.default
+            
+            guard let theUrl = saveAsAlert.url else
+            {
+                DLog("The impossible has occurred")
+                return
+            }
+            
+            if fileMgr.fileExists(atPath: theUrl.path)
+            {
+                do
+                {
+                    try fileMgr.removeItem(at: theUrl)
+                }
+                catch
+                {
+                    let alert = NSAlert(error: error)
+                    let _ = alert.runModal()
+                    return
+                }
+            }
+            
+            do
+            {
+                try self.atpFileView.string.write(to: theUrl, atomically: false, encoding: .utf8)
+            }
+            catch
+            {
+                let alert = NSAlert(error: error)
+                let _ = alert.runModal()
+                return
+            }
+            
+            self.atpFileWindow.title = theUrl.lastPathComponent
+            self.lastOpenedFile = theUrl
+            self.currentAtpTextIsDirty = false
+            
+            NSDocumentController.shared.noteNewRecentDocumentURL(theUrl)
+            
+        }
+    }
+    
+    @IBAction func handleRevertToSavedAtpFile(_ sender: Any)
+    {
+        guard let theUrl = self.lastOpenedFile else
+        {
+            DLog("This should never happen")
+            return
+        }
+        
+        do
+        {
+            try self.atpFileView.string = String(contentsOf: theUrl)
+        }
+        catch
+        {
+            let alert = NSAlert(error: error)
+            let _ = alert.runModal()
+            return
+        }
+        
+        self.atpFileView.needsDisplay = true
+        self.currentAtpTextIsDirty = false
+    }
+    
+    @IBAction func handleRunAtp(_ sender: Any)
+    {
+        if self.currentAtpTextIsDirty
+        {
+            let saveAlert = NSAlert()
+            
+            let fileName = self.lastOpenedFile == nil ? "untitled.dat" : self.atpFileWindow.title
+            
+            saveAlert.messageText = "Save changes to '\(fileName)' before running ATP?"
+            saveAlert.informativeText = "If you don't save, your changes will be lost (and ATP will run with the last-saved version of the file)."
+            
+            saveAlert.addButton(withTitle: "Save")
+            saveAlert.addButton(withTitle: "Cancel")
+            saveAlert.addButton(withTitle: "Don't Save")
+            
+            let runResult = saveAlert.runModal()
+            if runResult == .alertFirstButtonReturn
+            {
+                handleSaveAtpFile(sender)
+            }
+            else if runResult == .alertSecondButtonReturn
+            {
+                return
+            }
+        }
+        
+        guard let theUrl = self.lastOpenedFile else
+        {
+            DLog("This should never happen")
+            return
+        }
+        
+        guard let atpUrl = self.tpbigDirectory else
+        {
+            DLog("This should never happen")
+            return
+        }
+        
+        let tpbigs = TPBIGS(atpDirectory: atpUrl)
+        
+        // create our custom startup file, but only if it doesn't already exist in the directory
+        let startupUrl = atpUrl.appendingPathComponent("pch_startup")
+        
+        if !FileManager.default.fileExists(atPath: startupUrl.path)
+        {
+            let startup = ATP_Startup()
+            let newStartupString = startup.GenerateStartupFile()
+            
+            do
+            {
+                try newStartupString.write(to: startupUrl, atomically: false, encoding: .utf8)
+            }
+            catch
+            {
+                let alert = NSAlert(error: error)
+                let _ = alert.runModal()
+                return
+            }
+        }
+        
+        tpbigs.STARTUP = startupUrl
+        
+        do
+        {
+            try tpbigs.RunATP(inputURL: theUrl)
+        }
+        catch
+        {
+            DLog("An error occured: \(error)")
         }
         
     }
     
     func ValidateAtpFile(fileString:String) -> Bool
     {
+        // This is an extremely over-simplified way of checking whether the file is a valid ATP file but I get the feeling it is probably going to work most of the time.
         return fileString.contains("BEGIN NEW DATA CASE")
     }
     
     
-    // Debug Menu handlers
+    // MARK: Delegate functions
+    
+    // This is not strictly a delegate function for which AppController is the Delegate. It is called by AppDelegate if the user double-clicks a file for which our app is the "designated launcher". It is also used for the "Recent document" menu item
+    func doAtpFileOpen(theUrl:URL) -> Bool
+    {
+        if self.currentAtpTextIsDirty
+        {
+            let saveAlert = NSAlert()
+            
+            let fileName = self.lastOpenedFile == nil ? "untitled.dat" : self.atpFileWindow.title
+            
+            saveAlert.messageText = "Save changes to '\(fileName)' before closing?"
+            saveAlert.informativeText = "If you don't save, your changes will be lost."
+            
+            saveAlert.addButton(withTitle: "Save")
+            saveAlert.addButton(withTitle: "Cancel")
+            saveAlert.addButton(withTitle: "Don't Save")
+            
+            let runResult = saveAlert.runModal()
+            if runResult == .alertFirstButtonReturn
+            {
+                handleSaveAtpFile(self)
+            }
+            else if runResult == .alertSecondButtonReturn
+            {
+                return false
+            }
+        }
+        
+        var fileString = ""
+        
+        do
+        {
+            fileString = try String(contentsOf: theUrl)
+        }
+        catch
+        {
+            let alert = NSAlert(error: error)
+            let _ = alert.runModal()
+            
+            return false
+        }
+        
+        self.atpFileWindow.title = theUrl.lastPathComponent
+        self.lastOpenedFile = theUrl
+        self.atpFileView.string = fileString
+        self.atpFileView.needsDisplay = true
+        
+        NSDocumentController.shared.noteNewRecentDocumentURL(theUrl)
+        
+        return true
+    }
+    
+    // This is not strictly a delegate function for which AppController is the Delegate. It is called by AppDelegate to make sure that unsaved changes can be saved when the user quits.
+    func handleAppWillTerminate() -> Bool
+    {
+        if self.currentAtpTextIsDirty
+        {
+            let saveAlert = NSAlert()
+            
+            let fileName = self.lastOpenedFile == nil ? "untitled.dat" : self.atpFileWindow.title
+            
+            saveAlert.messageText = "Save changes to '\(fileName)' before closing?"
+            saveAlert.informativeText = "If you don't save, your changes will be lost."
+            
+            saveAlert.addButton(withTitle: "Save")
+            saveAlert.addButton(withTitle: "Cancel")
+            saveAlert.addButton(withTitle: "Don't Save")
+            
+            let runResult = saveAlert.runModal()
+            if runResult == .alertFirstButtonReturn
+            {
+                handleSaveAtpFile(self)
+            }
+            else if runResult == .alertSecondButtonReturn
+            {
+                return false
+            }
+            
+            self.lastOpenedFile = nil
+            self.currentAtpTextIsDirty = false
+            self.atpFileView.string = ""
+            self.atpFileView.needsDisplay = true
+            self.atpFileWindow.title = "untitled.dat"
+        }
+        
+        return true
+    }
+    
+    func textDidChange(_ notification: Notification)
+    {
+        if notification.object as? NSTextView == self.atpFileView
+        {
+            self.currentAtpTextIsDirty = true
+        }
+    }
+    
+    
+    
+    // MARK: Debug Menu handlers
     @IBAction func handleResetAtpLocation(_ sender: Any)
     {
         UserDefaults.standard.removeObject(forKey: atpUrlBookmarkKey)

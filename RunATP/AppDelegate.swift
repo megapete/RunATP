@@ -56,7 +56,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let alert = NSAlert()
             
             alert.alertStyle = .critical
-            alert.messageText = "Please select the location where you installed ATP. If you have not yet installed ATP, then click Quit, download ATP, and install it before relaunching this program.\n\n"
+            alert.messageText = "You must have ATP installed to use this program."
+            alert.informativeText = "Please select the location where you installed ATP. If you have not yet installed ATP, then click Quit, download ATP, and install it before relaunching this program."
             alert.addButton(withTitle: "Select ATP Location")
             alert.addButton(withTitle: "Quit")
             
@@ -71,9 +72,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
     }
+    
+    func application(_ sender: NSApplication, openFile filename: String) -> Bool
+    {
+        let fileURL = URL(fileURLWithPath: filename)
+        
+        return self.appController.doAtpFileOpen(theUrl: fileURL)
+    }
+    
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply
+    {
+        DLog("Got the Quit message!")
+        
+        if !self.appController.handleAppWillTerminate()
+        {
+            return .terminateCancel
+        }
+        
+        return .terminateNow
+    }
 
-    func applicationWillTerminate(_ aNotification: Notification) {
+    func applicationWillTerminate(_ aNotification: Notification)
+    {
         // Insert code here to tear down your application
+        DLog("Quitting now")
     }
 
 

@@ -526,6 +526,19 @@ class TPBIGS: NSObject
                         throw(RunAtpError.FileSystemError)
                     }
                 }
+                else
+                {
+                    do
+                    {
+                        // copy the custom STARTUP over to the ATP folder with the name STARTUP
+                        try defFileMgr.copyItem(at: useStartupURL!, to: startupURL)
+                    }
+                    catch
+                    {
+                        DLog("There was a problem creating STARTUP. The error was: \(error)")
+                        throw(RunAtpError.FileSystemError)
+                    }
+                }
             }
         }
         
