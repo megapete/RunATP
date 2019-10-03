@@ -282,6 +282,13 @@
                                     <action selector="handleRunAtp:" target="JTe-sr-GDH" id="TzS-JK-Hsb"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="I8p-yb-DkJ"/>
+                            <menuItem title="View LIS File" id="H7V-mL-FJT">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="handleRunAtp:" target="JTe-sr-GDH" id="UJV-PL-n7p"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="P2d-3O-rhj"/>
                             <menuItem title="Set ATP Location..." id="MwN-QL-y5m">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -696,6 +703,46 @@
                 </subviews>
             </view>
             <point key="canvasLocation" x="175" y="153"/>
+        </window>
+        <window title="LIS" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="OS0-2i-CX7">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="283" y="305" width="480" height="270"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <view key="contentView" id="ugC-PF-WMQ">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OvY-1q-lRE">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="Knq-xU-Yep">
+                            <rect key="frame" x="0.0" y="0.0" width="465" height="270"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textView ambiguous="YES" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="zgT-ft-1cQ">
+                                    <rect key="frame" x="0.0" y="0.0" width="465" height="270"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <size key="minSize" width="465" height="270"/>
+                                    <size key="maxSize" width="465" height="10000000"/>
+                                    <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                </textView>
+                            </subviews>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Jle-fm-H85">
+                            <rect key="frame" x="-100" y="-100" width="225" height="15"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="yWA-bQ-2tn">
+                            <rect key="frame" x="465" y="0.0" width="15" height="270"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
+                </subviews>
+            </view>
+            <point key="canvasLocation" x="922" y="-218"/>
         </window>
     </objects>
 </document>

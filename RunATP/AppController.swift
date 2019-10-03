@@ -194,6 +194,7 @@ class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextVie
             }
             
             self.atpFileWindow.title = theUrl.lastPathComponent
+            self.atpFileWindow.makeKeyAndOrderFront(nil)
             self.lastOpenedFile = theUrl
             self.atpFileView.string = fileString
             self.atpFileView.needsDisplay = true
@@ -418,14 +419,14 @@ class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextVie
         {
             try tpbigs.RunATP(inputURL: theUrl)
         }
-        catch let error as TPBIGS.AtpRunError
+        catch let error as TPBIGS.AtpRunError // The LIS file is either missing or has a "You lose, fella" condition
         {
-            if error.type == .NoLisFile
+            if error.type == .NoLisFile // missing file
             {
                 let alert = NSAlert(error: error)
                 let _ = alert.runModal()
             }
-            else if error.type == .AtpError
+            else if error.type == .AtpError // "You lose, fella"
             {
                 let alert = NSAlert()
                 
@@ -438,13 +439,15 @@ class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextVie
             
             return
         }
-        catch
+        catch // any other error that may be thrown
         {
             let alert = NSAlert(error: error)
             let _ = alert.runModal()
             
             return
         }
+        
+        // If we get here, we have a valid LIS file as well as a PL4 file available for reading.
         
     }
     
@@ -499,6 +502,7 @@ class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextVie
         }
         
         self.atpFileWindow.title = theUrl.lastPathComponent
+        self.atpFileWindow.makeKeyAndOrderFront(nil)
         self.lastOpenedFile = theUrl
         self.atpFileView.string = fileString
         self.atpFileView.needsDisplay = true

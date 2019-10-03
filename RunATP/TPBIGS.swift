@@ -491,6 +491,10 @@ class TPBIGS: NSObject
         // we'll need this a few times
         let defFileMgr = FileManager.default
         
+        // reset the output file URLs to nil
+        self.LIS = nil
+        self.PL4 = nil
+        
         // check if there was a new STARTUP file passed to the function
         var useStartupURL = STARTUP_URL
         
@@ -634,11 +638,23 @@ class TPBIGS: NSObject
         {
             try CheckLisFileForError(lisFile: lisUrl)
         }
+        catch let error as AtpRunError
+        {
+            if error.type == .AtpError
+            {
+                self.LIS = lisUrl
+            }
+            
+            throw(error)
+        }
         catch
         {
             throw(error)
         }
         
+        // set the output file URLs so that the calling routine can access them
+        self.LIS = lisUrl
+        self.PL4 = tmpDir.appendingPathComponent(PCH_ATP_TEMPORARY_FILE_PREFIX + ".pl4")
         
     }
     
