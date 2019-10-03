@@ -56,9 +56,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let alert = NSAlert()
             
             alert.alertStyle = .critical
-            alert.messageText = "You must have ATP installed to use this program."
-            alert.informativeText = "Please select the location where you installed ATP. If you have not yet installed ATP, then click Quit, download ATP, and install it before relaunching this program."
-            alert.addButton(withTitle: "Select ATP Location")
+            alert.messageText = "You must have ATP (tpbigs) installed to use this program."
+            alert.informativeText = "Please select the location where you installed ATP (tpbigs). If you have not yet installed ATP, then click Quit, download ATP, and install it before relaunching this program."
+            alert.addButton(withTitle: "Select tpbigs")
             alert.addButton(withTitle: "Quit")
             
             if alert.runModal() == .alertFirstButtonReturn
@@ -73,6 +73,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
     }
     
+    // This function is needed for the "Recent files" File menu option
     func application(_ sender: NSApplication, openFile filename: String) -> Bool
     {
         let fileURL = URL(fileURLWithPath: filename)

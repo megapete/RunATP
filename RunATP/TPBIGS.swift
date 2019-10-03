@@ -450,7 +450,6 @@ struct ATP_Startup
         
         return wString + String(repeating: " ", count: numSpaces)
     }
-    
 }
 
 class TPBIGS: NSObject
@@ -461,10 +460,16 @@ class TPBIGS: NSObject
     // The STARTUP file string to use when running ATP. If this is nil, it is assumed that the file STARTUP that is located in the same directory as TPBIGS will be used.
     var STARTUP:URL? = nil
     
+    // Output files from ATP.
+    var LIS:URL?
+    var PL4:URL?
+    
     // Designated initializer. Note that no check is done to verify that the URL is actually the ATP folder. This verification should be made prior to creating the TPBIGS object.
     init(atpDirectory:URL)
     {
         self.atpDirectory = atpDirectory
+        self.LIS = nil
+        self.PL4 = nil
     }
     
     enum RunAtpError: Error
@@ -522,8 +527,8 @@ class TPBIGS: NSObject
                     }
                     catch
                     {
-                        DLog("There was a problem replacing STARTUP. The error was: \(error)")
-                        throw(RunAtpError.FileSystemError)
+                        // DLog("There was a problem replacing STARTUP. The error was: \(error)")
+                        throw(error)
                     }
                 }
                 else
@@ -535,8 +540,8 @@ class TPBIGS: NSObject
                     }
                     catch
                     {
-                        DLog("There was a problem creating STARTUP. The error was: \(error)")
-                        throw(RunAtpError.FileSystemError)
+                        // DLog("There was a problem creating STARTUP. The error was: \(error)")
+                        throw(error)
                     }
                 }
             }
@@ -557,8 +562,8 @@ class TPBIGS: NSObject
             }
             catch
             {
-                DLog("Could not create temporary directory. The error was: \(error)")
-                throw(RunAtpError.FileSystemError)
+                // DLog("Could not create temporary directory. The error was: \(error)")
+                throw(error)
             }
         }
         
@@ -572,8 +577,8 @@ class TPBIGS: NSObject
             }
             catch
             {
-                DLog("Could not remove existing input file. The error was: \(error)")
-                throw(RunAtpError.FileSystemError)
+                // DLog("Could not remove existing input file. The error was: \(error)")
+                throw(error)
             }
         }
         
@@ -584,8 +589,8 @@ class TPBIGS: NSObject
         }
         catch
         {
-            DLog("Could not copy the input file. The error was: \(error)")
-            throw(RunAtpError.FileSystemError)
+            // DLog("Could not copy the input file. The error was: \(error)")
+            throw(error)
         }
         
         // run tpbigs
@@ -601,8 +606,8 @@ class TPBIGS: NSObject
         }
         catch
         {
-            DLog("Error while running ATP task: The error was: \(error)")
-            throw(RunAtpError.TaskRunError)
+            // DLog("Error while running ATP task: The error was: \(error)")
+            throw(error)
         }
         
         // check if we used a custom STARTUP and if so, fix the old one so everything is okay again
@@ -618,34 +623,67 @@ class TPBIGS: NSObject
             }
             catch
             {
-                DLog("An error occurred: \(error)")
-                throw(RunAtpError.FileSystemError)
+                // DLog("An error occurred: \(error)")
+                throw(error)
             }
         }
         
-        let lisCheck = CheckLisFileForError(lisFile: tmpDir.appendingPathComponent(PCH_ATP_TEMPORARY_FILE_PREFIX + ".lis"))
+        let lisUrl = tmpDir.appendingPathComponent(PCH_ATP_TEMPORARY_FILE_PREFIX + ".lis")
         
-        if (lisCheck.errNum != LisError.NoError.rawValue)
+        do
         {
-            throw(RunAtpError.AtpError(errorLine: ""))
+            try CheckLisFileForError(lisFile: lisUrl)
+        }
+        catch
+        {
+            throw(error)
+        }
+        
+        
+    }
+    
+    struct AtpRunError:Error
+    {
+        enum errorType
+        {
+            case NoLisFile // no LIS file was created (not sure that this can happen)
+            case AtpError // "You lose, fella"
+        }
+        
+        let atpLastLine:String
+        let atpKillCode:Int
+        let atpOverlay:Int
+        let atpNearbyStatementNumber:Int
+        let atpErrorString:String
+        let type:errorType
+        
+        var localizedDescription: String
+        {
+            get
+            {
+                if self.type == .NoLisFile
+                {
+                    return "ATP Runtime Error: No ouput (LIS) file was created."
+                }
+                else if self.type == .AtpError
+                {
+                    return "ATP Runtime Error: The last read line was \(atpLastLine) with KILL CODE = \(atpKillCode)"
+                }
+                else
+                {
+                    return "No error"
+                }
+            }
         }
     }
     
-    enum LisError:Int
-    {
-        case NoError = 0
-        case FileSystemError = 1
-        case NoLisFile = 2
-        case AtpErrorBase = 100
-    }
-    
-    func CheckLisFileForError(lisFile:URL) -> (errNum:Int, errString:String)
+    func CheckLisFileForError(lisFile:URL) throws
     {
         if !FileManager.default.fileExists(atPath: lisFile.path)
         {
-            DLog("LIS file does not exist!")
+            let error = AtpRunError(atpLastLine: "", atpKillCode: 0, atpOverlay: 0, atpNearbyStatementNumber: 0, atpErrorString: "", type: .NoLisFile)
             
-            return (LisError.NoLisFile.rawValue, "LIS File does not exist")
+            throw(error)
         }
         
         var lisFileString = ""
@@ -656,18 +694,53 @@ class TPBIGS: NSObject
         }
         catch
         {
-            DLog("Error accessing LIS file: \(error)")
-            
-            return (LisError.FileSystemError.rawValue, "\(error)")
+            throw(error)
         }
         
         if lisFileString.contains("ERROR/ERROR/ERROR")
         {
-            // This should be a LOT more complicated than this and scan the reason for the error from the LIS file and return it.
-            return(LisError.AtpErrorBase.rawValue, "See LIS file for details")
+            var lisLines = lisFileString.components(separatedBy: .newlines)
+            
+            while !lisLines[0].contains("ERROR/ERROR/ERROR")
+            {
+                lisLines.remove(at: 0)
+            }
+            
+            // remove 8 more lines
+            for _ in 0..<8
+            {
+                lisLines.remove(at: 0)
+            }
+            
+            let lastLine = lisLines[0]
+            
+            // remove two lines
+            lisLines.remove(at: 0)
+            lisLines.remove(at: 0)
+            
+            // next line has Kill code, Overlay number, and Nearby statement line, separated by spaces
+            let killLine = lisLines[0].components(separatedBy: .whitespaces).filter{$0 != ""}
+            
+            let killCode = Int(killLine[0])!
+            let overlay = Int(killLine[1])!
+            let nearbyLine = Int(killLine[2])!
+            
+            lisLines.remove(at: 0)
+            
+            var errorString = ""
+            while !lisLines[0].contains("---------------")
+            {
+                errorString += lisLines[0] + " "
+                lisLines.remove(at: 0)
+            }
+            
+            let error = AtpRunError(atpLastLine: lastLine, atpKillCode: killCode, atpOverlay: overlay, atpNearbyStatementNumber: nearbyLine, atpErrorString: errorString, type: .AtpError)
+            
+            throw(error)
+            
         }
         
-        return (LisError.NoError.rawValue, "")
+        
     }
 
 }

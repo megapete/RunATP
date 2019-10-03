@@ -418,9 +418,32 @@ class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextVie
         {
             try tpbigs.RunATP(inputURL: theUrl)
         }
+        catch let error as TPBIGS.AtpRunError
+        {
+            if error.type == .NoLisFile
+            {
+                let alert = NSAlert(error: error)
+                let _ = alert.runModal()
+            }
+            else if error.type == .AtpError
+            {
+                let alert = NSAlert()
+                
+                alert.messageText = "An error occured while running ATP\n\nKill Code: \(error.atpKillCode)\nOverlay: \(error.atpOverlay)\nNearby statement: \(error.atpNearbyStatementNumber)"
+                
+                alert.informativeText = error.atpErrorString
+                
+                let _ = alert.runModal()
+            }
+            
+            return
+        }
         catch
         {
-            DLog("An error occured: \(error)")
+            let alert = NSAlert(error: error)
+            let _ = alert.runModal()
+            
+            return
         }
         
     }
