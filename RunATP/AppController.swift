@@ -27,6 +27,11 @@ class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextVie
     // The URL of the last-opened file
     var lastOpenedFile:URL? = nil
     
+    // The window for the current LIS file
+    @IBOutlet weak var lisFileWindow: NSWindow!
+    
+    // The text view for the last LIS file that was run
+    @IBOutlet var lisFileView: NSTextView!
     
     // Set up some default stuff for our document window
     override func awakeFromNib()
@@ -38,6 +43,7 @@ class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextVie
             if let textFont = NSFont(name: startFontName, size: CGFloat(startFontSize))
             {
                 self.atpFileView.font = textFont
+                self.lisFileView.font = textFont
             }
         }
         else
@@ -45,19 +51,23 @@ class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextVie
             if let textFont = NSFont(name: "Menlo", size: 12.0)
             {
                 self.atpFileView.font = textFont
+                self.lisFileView.font = textFont
             }
             else if #available(OSX 10.15, *)
             {
                 self.atpFileView.font = NSFont.monospacedSystemFont(ofSize: 12.0, weight: .regular)
+                self.lisFileView.font = NSFont.monospacedSystemFont(ofSize: 12.0, weight: .regular)
             }
             else if let textFont = NSFont(name: "Courier-New", size: 12.0)
             {
                 self.atpFileView.font = textFont
+                self.lisFileView.font = textFont
             }
         }
         
-        atpFileView.delegate = self
-        atpFileView.isHidden = false
+        self.atpFileView.delegate = self
+        self.atpFileView.isHidden = false
+        
     }
     
     // MARK: Menu item accessors
@@ -448,6 +458,87 @@ class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextVie
         }
         
         // If we get here, we have a valid LIS file as well as a PL4 file available for reading.
+        guard let lisUrl = tpbigs.LIS else
+        {
+            let alert = NSAlert()
+            alert.messageText = "The LIS file does not exist!"
+            let _ = alert.runModal()
+            return
+        }
+        
+        var lisString = ""
+        
+        do
+        {
+            try lisString = String(contentsOf: lisUrl)
+        }
+        catch
+        {
+            let alert = NSAlert(error: error)
+            let _ = alert.runModal()
+            return
+        }
+        
+        self.lisFileView.string = lisString
+        let filePrefix = theUrl.deletingPathExtension().lastPathComponent
+        self.lisFileWindow.title = filePrefix + ".lis"
+        
+        
+        guard let pl4Url = tpbigs.PL4 else
+        {
+            let alert = NSAlert()
+            alert.messageText = "The PL4 file does not exist!"
+            let _ = alert.runModal()
+            return
+        }
+        
+        let outputAlert = NSAlert()
+        outputAlert.alertStyle = .informational
+        outputAlert.messageText = "ATP has successfully completed execution. Do you wish to save the LIS and PL4 files?"
+        outputAlert.informativeText = "Both files (.lis and .pl4) will be saved with the same name and location."
+        
+        outputAlert.addButton(withTitle: "Save")
+        outputAlert.addButton(withTitle: "No")
+        
+        if outputAlert.runModal() == .alertSecondButtonReturn
+        {
+            return
+        }
+        
+        let savePanel = NSSavePanel()
+        savePanel.directoryURL = theUrl.deletingLastPathComponent()
+        savePanel.allowedFileTypes = ["lis"]
+        savePanel.nameFieldStringValue = filePrefix
+        
+        if savePanel.runModal() == .OK
+        {
+            guard let savedLisUrl = savePanel.url else
+            {
+                let alert = NSAlert()
+                alert.messageText = "Could not get 'save' location."
+                let _ = alert.runModal()
+                return
+            }
+            
+            let savedPl4Url = savedLisUrl.deletingPathExtension().appendingPathExtension("pl4")
+            
+            let fileMgr = FileManager.default
+            
+            do
+            {
+                try fileMgr.copyItem(at: lisUrl, to: savedLisUrl)
+                try fileMgr.copyItem(at: pl4Url, to: savedPl4Url)
+            }
+            catch
+            {
+                let alert = NSAlert(error: error)
+                let _ = alert.runModal()
+                return
+            }
+            
+            self.lisFileWindow.makeKeyAndOrderFront(nil)
+            
+        }
         
     }
     

@@ -27,6 +27,8 @@
                 <outlet property="fileRevertToSavedMenuItem" destination="KaW-ft-85H" id="QxO-oH-PST"/>
                 <outlet property="fileSaveAsMenuItem" destination="Bw7-FT-i3A" id="gDM-Kt-sB0"/>
                 <outlet property="fileSaveMenuItem" destination="pxx-59-PXV" id="fYX-Ui-6zt"/>
+                <outlet property="lisFileView" destination="7uF-ti-f0e" id="xx3-HI-KN9"/>
+                <outlet property="lisFileWindow" destination="qZF-cg-RZs" id="vfP-Lb-P79"/>
                 <outlet property="runAtpMenuItem" destination="B7i-yC-Fmf" id="dJy-jq-RTf"/>
             </connections>
         </customObject>
@@ -704,45 +706,45 @@
             </view>
             <point key="canvasLocation" x="175" y="153"/>
         </window>
-        <window title="LIS" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="OS0-2i-CX7">
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="qZF-cg-RZs">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="283" y="305" width="480" height="270"/>
+            <rect key="contentRect" x="283" y="305" width="610" height="616"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
-            <view key="contentView" id="ugC-PF-WMQ">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+            <view key="contentView" id="UV8-9z-Ccv">
+                <rect key="frame" x="0.0" y="0.0" width="610" height="616"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OvY-1q-lRE">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                    <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lfX-Po-Z6n">
+                        <rect key="frame" x="0.0" y="0.0" width="610" height="616"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="Knq-xU-Yep">
-                            <rect key="frame" x="0.0" y="0.0" width="465" height="270"/>
+                        <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="uhj-9s-cK7">
+                            <rect key="frame" x="0.0" y="0.0" width="595" height="616"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView ambiguous="YES" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="zgT-ft-1cQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="465" height="270"/>
+                                <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" smartInsertDelete="YES" id="7uF-ti-f0e">
+                                    <rect key="frame" x="0.0" y="0.0" width="595" height="616"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    <size key="minSize" width="465" height="270"/>
-                                    <size key="maxSize" width="465" height="10000000"/>
+                                    <size key="minSize" width="595" height="616"/>
+                                    <size key="maxSize" width="595" height="10000000"/>
                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
                             </subviews>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Jle-fm-H85">
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="0bW-aG-XuO">
                             <rect key="frame" x="-100" y="-100" width="225" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="yWA-bQ-2tn">
-                            <rect key="frame" x="465" y="0.0" width="15" height="270"/>
+                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="Vma-6a-GIG">
+                            <rect key="frame" x="595" y="0.0" width="15" height="616"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="922" y="-218"/>
+            <point key="canvasLocation" x="974" y="-102"/>
         </window>
     </objects>
 </document>
