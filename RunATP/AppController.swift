@@ -524,6 +524,34 @@ class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextVie
             
             let fileMgr = FileManager.default
             
+            if fileMgr.fileExists(atPath: savedLisUrl.path)
+            {
+                do
+                {
+                    try fileMgr.removeItem(at: savedLisUrl)
+                }
+                catch
+                {
+                    let alert = NSAlert(error: error)
+                    let _ = alert.runModal()
+                    return
+                }
+            }
+            
+            if fileMgr.fileExists(atPath: savedPl4Url.path)
+            {
+                do
+                {
+                    try fileMgr.removeItem(at: savedPl4Url)
+                }
+                catch
+                {
+                    let alert = NSAlert(error: error)
+                    let _ = alert.runModal()
+                    return
+                }
+            }
+            
             do
             {
                 try fileMgr.copyItem(at: lisUrl, to: savedLisUrl)
