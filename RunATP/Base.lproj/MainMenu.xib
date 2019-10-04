@@ -288,7 +288,7 @@
                             <menuItem title="View LIS File" id="H7V-mL-FJT">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="handleRunAtp:" target="JTe-sr-GDH" id="UJV-PL-n7p"/>
+                                    <action selector="handleViewLisFile:" target="JTe-sr-GDH" id="72g-J8-3de"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="P2d-3O-rhj"/>
@@ -670,7 +670,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="710" height="834"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="710" height="834"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -679,15 +679,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="710" height="834"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="H7d-5D-I5v">
-                            <rect key="frame" x="0.0" y="0.0" width="695" height="834"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <rect key="frame" x="0.0" y="0.0" width="710" height="834"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textView hidden="YES" ambiguous="YES" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="bar" smartInsertDelete="YES" id="CBN-83-5sV">
-                                    <rect key="frame" x="0.0" y="0.0" width="695" height="834"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="710" height="834"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    <size key="minSize" width="695" height="834"/>
+                                    <size key="minSize" width="710" height="834"/>
                                     <size key="maxSize" width="710" height="10000000"/>
                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
@@ -697,7 +697,7 @@
                             <rect key="frame" x="-100" y="-100" width="225" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="kfR-BD-8Up">
+                        <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="kfR-BD-8Up">
                             <rect key="frame" x="695" y="0.0" width="15" height="834"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
@@ -706,11 +706,11 @@
             </view>
             <point key="canvasLocation" x="175" y="153"/>
         </window>
-        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="qZF-cg-RZs">
+        <window title=".lis" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="qZF-cg-RZs">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="283" y="305" width="610" height="616"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" id="UV8-9z-Ccv">
                 <rect key="frame" x="0.0" y="0.0" width="610" height="616"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -719,26 +719,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="610" height="616"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="uhj-9s-cK7">
-                            <rect key="frame" x="0.0" y="0.0" width="595" height="616"/>
+                            <rect key="frame" x="0.0" y="0.0" width="610" height="616"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" smartInsertDelete="YES" id="7uF-ti-f0e">
-                                    <rect key="frame" x="0.0" y="0.0" width="595" height="616"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="610" height="616"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    <size key="minSize" width="595" height="616"/>
-                                    <size key="maxSize" width="595" height="10000000"/>
+                                    <size key="minSize" width="610" height="616"/>
+                                    <size key="maxSize" width="610" height="10000000"/>
                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
                             </subviews>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="0bW-aG-XuO">
+                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="0bW-aG-XuO">
                             <rect key="frame" x="-100" y="-100" width="225" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="Vma-6a-GIG">
-                            <rect key="frame" x="595" y="0.0" width="15" height="616"/>
+                        <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="Vma-6a-GIG">
+                            <rect key="frame" x="594" y="0.0" width="16" height="616"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>

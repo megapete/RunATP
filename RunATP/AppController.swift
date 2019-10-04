@@ -570,6 +570,12 @@ class AppController: NSObject, NSWindowDelegate, NSMenuItemValidation, NSTextVie
         
     }
     
+    @IBAction func handleViewLisFile(_ sender: Any)
+    {
+        self.lisFileWindow.makeKeyAndOrderFront(nil)
+    }
+    
+    
     func ValidateAtpFile(fileString:String) -> Bool
     {
         // This is an extremely over-simplified way of checking whether the file is a valid ATP file but I get the feeling it is probably going to work most of the time.
